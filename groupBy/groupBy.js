@@ -1,14 +1,18 @@
-const areLengthsUndefined = function (element1, element2) {
-  return element1.length === undefined && element2.length === undefined;
-};
+const areBothArrays = function (element1, element2) {
+  return Array.isArray(element1) && Array.isArray(element2);
+}
 
 const areArraysEqual = function (array1, array2) {
+  if (!areBothArrays(array1, array2)) {
+    return false;
+  }
+
   if (array1.length !== array2.length) {
     return false;
   }
 
   for (let index = 0; index < array1.length; index++) {
-    if (array1[index] !== array2[index]) {
+    if (!areElementsEqual(array1[index], array2[index])) {
       return false;
     }
   }
@@ -17,16 +21,15 @@ const areArraysEqual = function (array1, array2) {
 };
 
 const areElementsEqual = function (element1, element2) {
-  if (areLengthsUndefined(element1, element2)) {
-    return element1 === element2;
+  if (areBothArrays(element1, element2)) {
+    return areArraysEqual(element1, element2);
   }
-
-  return areArraysEqual(element1, element2);
+  return element1 === element2
 };
 
-const isSubset = function (set, subset) {
+const includes = function (set, element) {
   for (let index = 0; index < set.length; index++) {
-    if (areElementsEqual(set[index], subset)) {
+    if (areElementsEqual(set[index], element)) {
       return true;
     }
   }
@@ -38,7 +41,7 @@ const getUniqueElements = function (set) {
   const uniqueElements = [];
 
   for (let index = 0; index < set.length; index++) {
-    if (!isSubset(uniqueElements, set[index])) {
+    if (!includes(uniqueElements, set[index])) {
       uniqueElements.push(set[index]);
     }
   }
@@ -46,7 +49,7 @@ const getUniqueElements = function (set) {
   return uniqueElements;
 };
 
-const uniqueSubsets = function (set) {
+const groupByIdentity = function (set) {
   const uniqueElements = getUniqueElements(set);
   const subsets = [];
 
@@ -64,6 +67,12 @@ const uniqueSubsets = function (set) {
   return subsets;
 };
 
-console.log(uniqueSubsets([1, 2, 1]));
-console.log(uniqueSubsets([1, 2, 3, 1, 2, 4]));
-console.log(uniqueSubsets([[1, 1], 1, [1, 1], 1]));
+console.log(groupByIdentity([1, 2, 1])); //[ [ 1, 1 ], [ 2 ] ]
+console.log(groupByIdentity([1, 2, 3, 1, 2, 4])); //[ [ 1, 1 ], [ 2, 2 ], [ 3 ], [ 4 ] ]
+console.log(groupByIdentity([[1, 1], 1, [1, 1], 1])); //[ [ [ 1, 1 ], [ 1, 1 ] ], [ 1, 1 ] ]
+console.log(groupByIdentity([[1, 2], '1,2', '1,2', [1, 2]])); // [ [ [ 1, 2 ], [ 1, 2 ] ], [ '1,2', '1,2' ] ]
+console.log(groupByIdentity(['1', 2, 1, 'a', 'b', 'a'])); //[ [ '1' ], [ 2 ], [ 1 ], [ 'a', 'a' ], [ 'b' ] ]
+console.log(groupByIdentity([[], 2, 1, []])); //[ [ [], [] ], [ 2 ], [ 1 ] ]
+console.log(groupByIdentity([[1, 2], [1, 2]])); //[ [ [ 1, 2 ], [ 1, 2 ] ] ]
+console.log(groupByIdentity([[], 1, [], 1])); //[ [ [], [] ], [ 1, 1 ] ]
+console.log(groupByIdentity([[[1], [2]], [[1], [2]]])); //[ [ [ [Array], [Array] ], [ [Array], [Array] ] ] ]
