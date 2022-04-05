@@ -1,6 +1,6 @@
 const areBothArrays = function (element1, element2) {
   return Array.isArray(element1) && Array.isArray(element2);
-}
+};
 
 const areArraysEqual = function (array1, array2) {
   if (!areBothArrays(array1, array2)) {
@@ -27,44 +27,23 @@ const areElementsEqual = function (element1, element2) {
   return element1 === element2
 };
 
-const includes = function (set, element) {
-  for (let index = 0; index < set.length; index++) {
-    if (areElementsEqual(set[index], element)) {
-      return true;
+
+const classifyByIdentity = function (identityGroups, currentElement) {
+  for (let index = 0; index < identityGroups.length; index++) {
+    if (areElementsEqual(currentElement, identityGroups[index][0])) {
+      return identityGroups[index].push(currentElement);
     }
   }
-
-  return false;
-};
-
-const getUniqueElements = function (set) {
-  const uniqueElements = [];
-
-  for (let index = 0; index < set.length; index++) {
-    if (!includes(uniqueElements, set[index])) {
-      uniqueElements.push(set[index]);
-    }
-  }
-
-  return uniqueElements;
+  return identityGroups.push([currentElement]);
 };
 
 const groupByIdentity = function (set) {
-  const uniqueElements = getUniqueElements(set);
-  const subsets = [];
+  const identityGroups = [];
 
-  for (let index = 0; index < uniqueElements.length; index++) {
-    const subset = [];
-
-    for (let j = 0; j < set.length; j++) {
-      if (areElementsEqual(uniqueElements[index], set[j])) {
-        subset.push(set[j]);
-      }
-    }
-    subsets.push(subset);
+  for (index = 0; index < set.length; index++) {
+    classifyByIdentity(identityGroups, set[index]);
   }
-
-  return subsets;
+  return identityGroups;
 };
 
 console.log(groupByIdentity([1, 2, 1])); //[ [ 1, 1 ], [ 2 ] ]
