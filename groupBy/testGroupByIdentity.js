@@ -1,13 +1,13 @@
-const areElementsEqual = require('./lib.js').areElementsEqual;
+const isEqual = require('./lib.js').isEqual;
 const groupByIdentity = require('./groupByIdentity.js').groupByIdentity;
 
 const testGroupByIdentity = function (set, expectedSet, description) {
   let result = 'x';
-  if (areElementsEqual(groupByIdentity(set), expectedSet)) {
+  if (isEqual(groupByIdentity(set), expectedSet)) {
     result = '✓';
   }
   console.log(result, '-', description);
-  return areElementsEqual(set, expectedSet);
+  return isEqual(set, expectedSet);
 }
 
 const groupByIdentityTestCases = function () {

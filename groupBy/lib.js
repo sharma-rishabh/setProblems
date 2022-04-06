@@ -1,30 +1,24 @@
-const areBothArrays = function (element1, element2) {
-  return Array.isArray(element1) && Array.isArray(element2);
-};
+const isArray = Array.isArray;
 
-const areArraysEqual = function (array1, array2) {
-  if (!areBothArrays(array1, array2)) {
+const isEqual = function (LHS, RHS) {
+  const isOneOfThemPrimitive = !(isArray(LHS) && isArray(RHS));
+  if (isOneOfThemPrimitive) {
+    return LHS === RHS;
+  }
+
+  const lhsArray = LHS, rhsArray = RHS;
+
+  if (rhsArray.length !== lhsArray.length) {
     return false;
   }
 
-  if (array1.length !== array2.length) {
-    return false;
+  if (rhsArray.length === 0) {
+    return true;
   }
 
-  for (let index = 0; index < array1.length; index++) {
-    if (!areElementsEqual(array1[index], array2[index])) {
-      return false;
-    }
-  }
+  const areFirstElementsEqual = isEqual(lhsArray[0], rhsArray[0]);
+  return areFirstElementsEqual && isEqual(lhsArray.slice(1), rhsArray.slice(1));
 
-  return true;
 };
 
-const areElementsEqual = function (element1, element2) {
-  if (areBothArrays(element1, element2)) {
-    return areArraysEqual(element1, element2);
-  }
-  return element1 === element2
-};
-
-exports.areElementsEqual = areElementsEqual;
+exports.isEqual = isEqual;

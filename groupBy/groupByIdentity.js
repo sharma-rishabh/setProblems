@@ -1,20 +1,20 @@
 const library = require('./lib.js')
-const areElementsEqual = library.areElementsEqual;
+const isEqual = library.isEqual;
 
 const classifyByIdentity = function (identityGroups, currentElement) {
   for (let index = 0; index < identityGroups.length; index++) {
-    if (areElementsEqual(currentElement, identityGroups[index][0])) {
+    if (isEqual(currentElement, identityGroups[index][0])) {
       return identityGroups[index].push(currentElement);
     }
   }
   return identityGroups.push([currentElement]);
 };
 
-const groupByIdentity = function (set) {
+const groupByIdentity = function (elementList) {
   const identityGroups = [];
 
-  for (index = 0; index < set.length; index++) {
-    classifyByIdentity(identityGroups, set[index]);
+  for (index = 0; index < elementList.length; index++) {
+    classifyByIdentity(identityGroups, elementList[index]);
   }
   return identityGroups;
 };
